@@ -26,6 +26,7 @@ public class LoggerController {
         //3 推送kafka，用于实时分析
         System.out.println(jsonObject.toString());
 
+
         return null;
     }
 
