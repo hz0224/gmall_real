@@ -18,6 +18,8 @@
     <modules>
         <module>gmall_common</module>
         <module>gmall_mock</module>
+        <module>gmall_logger</module>
+        <module>real_time</module>
     </modules>
 
     <properties>

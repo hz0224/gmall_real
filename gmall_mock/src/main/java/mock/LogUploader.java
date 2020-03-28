@@ -24,14 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-//通过http方法发送到采集系统的web端口
+//通过http方法发送到采集系统的web端口r
 public class LogUploader {
 
     public static void sendLogStream(String log){
         try{
             //不同的日志类型对应不同的URL
 
-            URL url  =new URL("http://192.168.5.43:8080/log");
+            URL url  =new URL("http://hangzhou1-yun/log");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //设置请求方式为post
