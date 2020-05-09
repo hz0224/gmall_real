@@ -9,6 +9,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 import util.{DateUtil, MyKafkaUtil, MyRedis}
 import org.apache.phoenix.spark._
 
+
 /**
   * Created by Liu HangZhou on 2020/03/29
   * desc: 日活 (daily active user)
@@ -102,13 +103,10 @@ object DauApp {
     ssc.awaitTermination()
   }
 
-
-
   def main(args: Array[String]): Unit = {
       val currentDate = DateUtil.getCurrentDate()
       val conf = new SparkConf().setAppName("dau_app_" + currentDate).setMaster("local[*]")
       val sc = new SparkContext(conf)
       runTask(sc,args)
   }
-
 }

@@ -16,7 +16,6 @@ public class JsonMocker {
 
     RandomDate logDateUtil= null;
 
-
     RanOpt[] osOpts= {new RanOpt("ios",3),new RanOpt("andriod",7) };
     RandomOptionGroup<String> osOptionGroup= new RandomOptionGroup(osOpts);
     Date startTime= null;
@@ -38,8 +37,12 @@ public class JsonMocker {
 
     RandomOptionGroup<String>  vsOptionGroup= new RandomOptionGroup(vsOpts);
 
-    RanOpt[] eventOpts= {new RanOpt("addFavor",10),new RanOpt("addComment",30),
+/*    RanOpt[] eventOpts= {new RanOpt("addFavor",10),new RanOpt("addComment",30),
             new RanOpt("addCart",20), new RanOpt("clickItem",40)
+    };*/
+
+    RanOpt[] eventOpts= {new RanOpt("addFavor",10),new RanOpt("addComment",15),
+            new RanOpt("addCart",20), new RanOpt("clickItem",1) ,new RanOpt("coupon",45)
     };
 
     RandomOptionGroup<String>  eventOptionGroup= new RandomOptionGroup(eventOpts);
@@ -122,6 +125,8 @@ public class JsonMocker {
 
         String mid= "mid_"+ RandomNum.getRandInt(1,500);
         String uid="uid_"+ RandomNum.getRandInt(1,500);
+       /* String mid= "mid_"+ RandomNum.getRandInt(1,40);
+        String uid="uid_"+ RandomNum.getRandInt(1,200);*/
         String os=osOptionGroup.getRandomOpt().getValue();
         String appid=this.appId;
         String area=areaOptionGroup.getRandomOpt().getValue();

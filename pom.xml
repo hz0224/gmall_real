@@ -21,6 +21,7 @@
         <module>gmall_logger</module>
         <module>real_time</module>
         <module>gmall_publisher</module>
+        <module>gmall_canal</module>
     </modules>
 
     <properties>
@@ -118,6 +119,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 
 
 </project>

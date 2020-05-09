@@ -29,7 +29,10 @@ object MyRedis {
 
 
   def main(args: Array[String]): Unit = {
-
+    val set = jedis.smembers("dau:2020-03-30")
+    for(e <- set){
+      println(e)
+    }
   }
 
 }

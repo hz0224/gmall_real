@@ -10,7 +10,7 @@ import io.searchbox.core.{Bulk, BulkResult, Index}
 import scala.collection.JavaConversions._
 
 object MyEsUtil {
-  private val ES_HOST = "http://hadoop1"
+  private val ES_HOST = "http://hangzhou1-yun"
   private val ES_HTTP_PORT = 9200
   private var factory: JestClientFactory = null
 
@@ -63,10 +63,9 @@ object MyEsUtil {
       }
     // local
       val bulk: Bulk = bulkBuilder.build()
-      val items: util.List[BulkResult#BulkResultItem] = jestClient.execute(bulk).getFailedItems
-      println("保存"+items.mkString(",")+"条")
+      val items: util.List[BulkResult#BulkResultItem] = jestClient.execute(bulk).getItems
+      println("保存"+items.size+"条")
       close(jestClient)
-
     }
 
   }

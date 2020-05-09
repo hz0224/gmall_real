@@ -26,15 +26,12 @@ public class LoggerController {
 
     @RequestMapping(value = "/log",method = RequestMethod.POST)
     public String getLog(@RequestParam("logString") String logString){
-
         //1 加上服务器时间
         JSONObject jsonObject = JSON.parseObject(logString);
         jsonObject.put("ts",System.currentTimeMillis());
         String logJson = jsonObject.toString();
-
         //2 写日志，用于离线分析
         logger.info(logJson);
-
         //3 推送kafka，用于实时分析
         if ("startup".equals(jsonObject.getString("type"))){
             kafkaTemplate.send(GmallConstant.KAFKA_TOPIC_STARTUP,logJson);
