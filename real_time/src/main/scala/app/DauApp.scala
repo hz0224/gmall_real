@@ -99,6 +99,8 @@ object DauApp {
         Some("hangzhou1-yun,hangzhou2-yun,hangzhou3-yun:2181"))
     }//无论这里的表名定义的是小写或是大写,都会转换成大写.所以创建表时表名需要使用大写.
 
+    realFilterStartupLogDStream.print()
+
     ssc.start()
     ssc.awaitTermination()
   }

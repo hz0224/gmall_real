@@ -92,6 +92,8 @@ public class PublisherController {
         //根据参数查询es
         Map<String, Object> saleDetailMap = publisherService.getSaleDetailFromES(date, keyword, startpage, size);
 
+        System.out.println(saleDetailMap);
+
 
         Set<Map.Entry<String, Object>> entrySet = saleDetailMap.entrySet();
         for (Map.Entry<String, Object> entry : entrySet) {
@@ -107,7 +109,8 @@ public class PublisherController {
 
         Long maleCount =(Long)genderMap.get("M");
         Long femaleCount =(Long)genderMap.get("F");
-
+        maleCount = maleCount==null? 0L : maleCount;
+        femaleCount = femaleCount==null? 0L : femaleCount;
 
         Double maleRatio= Math.round(maleCount*1000D/total)/10D;
         Double femaleRatio= Math.round(femaleCount*1000D/total)/10D;

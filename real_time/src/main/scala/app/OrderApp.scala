@@ -42,7 +42,7 @@ object OrderApp {
       )
     }
 
-
+    orderInfoDstream.print()
     ssc.start()
     ssc.awaitTermination()
 

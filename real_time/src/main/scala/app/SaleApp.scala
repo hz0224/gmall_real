@@ -24,7 +24,6 @@ object SaleApp {
     val orderInputDStream = MyKafkaUtil.getKafkaStream(GmallConstant.KAFKA_TOPIC_ORDER,ssc)
     val orderDetailInputDStream = MyKafkaUtil.getKafkaStream(GmallConstant.KAFKA_TOPIC_ORDER_DETAIL,ssc)
 
-
    // order_info简单处理      1 加时间  2 电话号码脱敏
     val orderInfoDstream = orderInputDStream.map { record =>
       val orderInfoJson = record.value()
@@ -40,6 +39,7 @@ object SaleApp {
       orderInfoObj
     }
 
+    userInfoInputDStream.print()
 
     //转换为case class
     val orderDetailDStream = orderDetailInputDStream.map { record =>
@@ -153,6 +153,7 @@ object SaleApp {
     }
 
 
+    saleFullDetailDStream.print()
 
 
     ssc.start()
