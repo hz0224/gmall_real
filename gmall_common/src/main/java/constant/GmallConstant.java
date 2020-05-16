@@ -19,6 +19,8 @@ public class GmallConstant {
 
     public static final String  ES_INDEX_ALERT="gmall_coupon_alert";
 
+    public static final String  ES_INDEX_SALE="gmall_sale_detail";
+
 
 
 }

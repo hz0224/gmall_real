@@ -6,6 +6,7 @@ import constant.GmallConstant;
 import util.MyKafkaSender;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Liu HangZhou on 2020/03/31
@@ -27,7 +28,6 @@ public class CanalHandler {
     }
 
     public void handleController(){
-        System.out.println(event);
         switch (event){
             case "INSERT->order_info" : handleInsertOrderInfo();break;
             case "INSERT->order_detail": handleInsertOrderDetail();break;
@@ -64,6 +64,14 @@ public class CanalHandler {
             }
             //发送kafka
             MyKafkaSender.send(topic,jsonObject.toJSONString());
+            System.out.println(jsonObject.toJSONString());
+
+            try {
+                Thread.sleep(new Random().nextInt(3) * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
 
     }

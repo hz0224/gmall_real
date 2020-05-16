@@ -60,6 +60,7 @@ object AlertApp {
 
     val filterAlterDStream = checkedDStream.filter{case (isAlter,alertInfo)=>isAlter}.map{case (isAlter,alertInfo)=>alertInfo}
 
+    filterAlterDStream.print()
     //保存到ES中.
     filterAlterDStream.foreachRDD{rdd=>
       rdd.foreachPartition{ alertItr=>

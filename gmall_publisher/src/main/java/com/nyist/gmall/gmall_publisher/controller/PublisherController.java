@@ -1,6 +1,8 @@
 package com.nyist.gmall.gmall_publisher.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.nyist.gmall.gmall_publisher.bean.Option;
+import com.nyist.gmall.gmall_publisher.bean.Stat;
 import com.nyist.gmall.gmall_publisher.service.PublisherService;
 import com.nyist.gmall.gmall_publisher.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Liu HangZhou on 2020/03/30
@@ -84,4 +84,82 @@ public class PublisherController {
         map.put("today",todayOrderAmountHourTotal);
         return JSON.toJSONString(map);
     }
+
+    @RequestMapping(value = "/sale_detail",method = RequestMethod.GET)
+    public String getSaleDetail(@RequestParam("date") String date, @RequestParam("keyword") String keyword,
+                                @RequestParam("startpage") int startpage,@RequestParam("size") int size){
+
+        //根据参数查询es
+        Map<String, Object> saleDetailMap = publisherService.getSaleDetailFromES(date, keyword, startpage, size);
+
+
+        Set<Map.Entry<String, Object>> entrySet = saleDetailMap.entrySet();
+        for (Map.Entry<String, Object> entry : entrySet) {
+            System.out.println(entry.getKey() + "----------" + entry.getValue());
+        }
+
+
+        Long total =(Long)saleDetailMap.get("total");
+        List saleList =(List) saleDetailMap.get("saleList");
+        Map genderMap =(Map) saleDetailMap.get("genderMap");
+        Map ageMap = (Map)saleDetailMap.get("ageMap");
+
+
+        Long maleCount =(Long)genderMap.get("M");
+        Long femaleCount =(Long)genderMap.get("F");
+
+
+        Double maleRatio= Math.round(maleCount*1000D/total)/10D;
+        Double femaleRatio= Math.round(femaleCount*1000D/total)/10D;
+
+        List genderOptionList=new ArrayList();
+        genderOptionList.add( new Option("男",maleRatio));
+        genderOptionList.add( new Option("女",femaleRatio));
+
+        Stat genderStat = new Stat("性别占比", genderOptionList);
+
+
+        Long age_20count=0L;
+        Long age20_30count=0L;
+        Long age30_count=0L;
+        for (Object o : ageMap.entrySet()) {
+            Map.Entry entry = (Map.Entry) o;
+            String ageString = (String)entry.getKey();
+            Long ageCount = (Long)entry.getValue();
+            if(Integer.parseInt(ageString)<20){
+                age_20count+=ageCount;
+            }else if(Integer.parseInt(ageString)>=20 &&Integer.parseInt(ageString)<=30){
+                age20_30count+=ageCount;
+            }else{
+                age30_count+=ageCount;
+            }
+        }
+
+        Double age_20Ratio= Math.round(age_20count*1000D/total)/10D;
+        Double age20_30Ratio= Math.round(age20_30count*1000D/total)/10D;
+        Double age30_Ratio= Math.round(age30_count*1000D/total)/10D;
+
+        List ageOptionList=new ArrayList();
+        ageOptionList.add( new Option("20岁以下",age_20Ratio));
+        ageOptionList.add( new Option("20岁到30岁",age20_30Ratio));
+        ageOptionList.add( new Option("30岁以上",age30_Ratio));
+
+        Stat ageStat = new Stat("年龄段占比", ageOptionList);
+
+        List statList=new ArrayList();
+        statList.add(genderStat);
+        statList.add(ageStat);
+
+        System.out.println(statList);
+        System.out.println(saleList);
+
+        Map finalResultMap=new HashMap();
+        finalResultMap.put("total",total);
+        finalResultMap.put("stat",statList);
+        finalResultMap.put("detail" ,saleList);
+
+
+        return JSON.toJSONString(finalResultMap);
+    }
+
 }
