@@ -90,23 +90,24 @@ object SaleApp {
         }
       }else if(!orderInfoOpt.isDefined){
         //2 如果order_info为none(说明它还没有来,他可能在下一批来并且只会来一次)，那么order_detail一定不为none.
-        //① 把order_detail自己写入缓存
-        //② 查询order_info表缓存
-
-        //写 order_detail缓存
-        val orderDetail = orderDetailOpt.get
-        val orderDetailJson = Serialization.write(orderDetail)
-        val order_detail_key = "order_detail:" + orderDetail.order_id
-        jedis.sadd(order_detail_key,orderDetailJson)
-        //jedis.expire(order_detail_key,60 * 60)
+        //① 查询order_info表缓存
+        //  如果缓存里能查到数据，说明order_info早来了，此时关联输出。由于order_info只会来一次，如果能从缓存里关联到，后面也不会再来了，此时order_detail自己可以不用写到缓存里。
+        //  如果缓存里没有查到数据，说明order_info还没有来，order_detail来早了，此时将自己order_detail写到缓存里(设置ttl时间),等待与order_info关联.
 
         //查order_info缓存
         val orderInfoJson = jedis.get("order_info:" + orderDetail.order_id)
         if(orderInfoJson != null && orderInfoJson.length >0){
           val orderInfo = JSON.parseObject(orderInfoJson,classOf[OrderInfo])
           saleDetails += new SaleDetail(orderInfo,orderDetail)
+        }else{
+          //写 order_detail缓存
+          val orderDetail = orderDetailOpt.get
+          val orderDetailJson = Serialization.write(orderDetail)
+          val order_detail_key = "order_detail:" + orderDetail.order_id
+          jedis.sadd(order_detail_key,orderDetailJson)
+          jedis.expire(order_detail_key,60 * 60)
         }
-      }////无论是哪种情况都要进行查询缓存和将自己写入缓存,只有这样才能保证数据完整。
+      }
 
       jedis.close()
       saleDetails
